@@ -30,6 +30,16 @@ npm install
 npm run dev
 ```
 
+### 🖥️ Accessing the UI
+Once the HUD server is initiated, you can access the interface through your local terminal network at:
+👉 **[http://localhost:5173/](http://localhost:5173/)**
+
+### 🎮 Interface Control Protocol
+1.  **Input Configuration**: Use the left-side telemetry panel to set your model's billion-parameter count.
+2.  **Precision Calibration**: Adjust the "Model Quantization" dropdown to simulate different compression levels (e.g., Q4 for standard consumer hardware, F16 for high-fidelity clusters).
+3.  **Real-Time Feedback**: Monitor the right-side "Hardware Requirements" panel for instant VRAM and system memory projections.
+4.  **Hardware Toggle**: Select between "Discrete GPU" (RTX/NVIDIA style) or "Unified Memory" (Stark/Apple style) to see how the architecture impact requirement scales.
+
 ### 🧠 Technical Operations
 
 - **KV Cache Allocation:** Enabling KV Cache re-uses attention vectors, significantly accelerating real-time decoding, monitored directly in your VRAM overhead.
