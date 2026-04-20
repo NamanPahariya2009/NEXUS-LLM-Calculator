@@ -1,4 +1,4 @@
-name: Dependency Audit
+name: Dependency Audit Report
 on:
   schedule:
     - cron: '0 0 * * *' # Daily at midnight UTC
@@ -7,6 +7,7 @@ on:
 
 jobs:
   audit:
+    name: Generate audit report
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
