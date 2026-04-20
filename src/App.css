@@ -1,0 +1,237 @@
+/* App.css */
+
+/* Stark Industries / JARVIS Theme (Permanent Dark) */
+:root {
+  --bg-color: #020617;
+  --primary-color: #00f3ff;
+  --secondary-color: #a5f3fc;
+  --accent-color: #ffb700;
+  --card-bg: rgba(0, 243, 255, 0.05);
+  --card-border: rgba(0, 243, 255, 0.3);
+  --border-radius: 8px;
+  --text-color: #e0f2fe;
+  --input-bg: rgba(2, 6, 23, 0.8);
+  --input-border: rgba(0, 243, 255, 0.5);
+  --select-bg: rgba(2, 6, 23, 0.9);
+  --highlight-color: #ff2a2a;
+}
+
+#root {
+  width: 100%;
+}
+
+/* Global reset */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  font-family: 'Space Mono', monospace;
+  color: var(--secondary-color);
+}
+
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.layout {
+  display: flex;
+  gap: 2rem;
+  width: fit-content;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* HUD Glassmorphism Panels */
+.input-panel,
+.results-panel {
+  backdrop-filter: blur(8px);
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1), inset 0 0 10px rgba(0, 243, 255, 0.05);
+  padding: 1.5rem;
+}
+
+.input-panel {
+  width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.input-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.input-panel::-webkit-scrollbar-track {
+  background: rgba(0, 243, 255, 0.05);
+}
+.input-panel::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+.results-panel {
+  width: 440px;
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  box-sizing: border-box;
+  height: fit-content;
+  border-right: 4px solid var(--primary-color);
+}
+
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .input-panel,
+  .results-panel {
+    width: 100%;
+    margin: 0 auto;
+    max-height: initial;
+  }
+
+  .results-panel {
+    position: static;
+    margin-top: 1rem;
+  }
+}
+
+/* Headings */
+h1 {
+  margin-top: 0;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+  font-size: 2.8rem;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+  letter-spacing: 2px;
+}
+
+.intro-text {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+h2 {
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 0.5rem;
+}
+
+/* Sliders & labels */
+.label-range {
+  display: block;
+  margin-top: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+input[type='range'] {
+  width: 100%;
+  margin: 0.5rem 0 1rem 0;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: rgba(0, 243, 255, 0.2);
+  border-radius: 2px;
+  box-shadow: inset 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+input[type='range']::-webkit-slider-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -6px;
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* Checkboxes */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Input fields and dropdowns */
+input[type='number'],
+select {
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--input-border);
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  background-color: var(--input-bg);
+  transition: all 0.3s ease;
+  font-family: 'Space Mono', monospace;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+input[type='number']:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 8px rgba(0, 243, 255, 0.4), inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+input[type='checkbox'] {
+  accent-color: var(--primary-color);
+  width: 16px;
+  height: 16px;
+}
+
+/* Highlights */
+.result-highlight {
+  color: var(--highlight-color);
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 42, 42, 0.5);
+  font-size: 1.1em;
+}
+
+.section-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* KV Cache Animation */
+.kvCacheAnimate {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.kvCacheAnimate.open {
+  max-height: 250px;
+  opacity: 1;
+}
+
+.kvCacheAnimate.closed {
+  max-height: 0;
+  opacity: 0;
+}
