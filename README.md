@@ -20,7 +20,7 @@ Built with a high-fidelity Heads-Up Display (HUD) mimicking Stark-level design, 
 
 ### 🔧 Installation / Initialization Protocol
 
-Execute the following network commands to bring the HUD online locally. 
+Execute the following network commands to bring the HUD online locally.
 
 ```bash
 # 1. Establish dependencies
@@ -31,10 +31,12 @@ npm run dev
 ```
 
 ### 🖥️ Accessing the UI
+
 Once the HUD server is initiated, you can access the interface through your local terminal network at:
-👉 **[http://localhost:5173/](http://localhost:5173/)**
+👉 **[http://localhost:5173/](http://localhost:5173/)** on the laptop itself, or **http://<your-laptop-ip>:5173/** from another device on the same network.
 
 ### 🎮 Interface Control Protocol
+
 1.  **Input Configuration**: Use the left-side telemetry panel to set your model's billion-parameter count.
 2.  **Precision Calibration**: Adjust the "Model Quantization" dropdown to simulate different compression levels (e.g., Q4 for standard consumer hardware, F16 for high-fidelity clusters).
 3.  **Real-Time Feedback**: Monitor the right-side "Hardware Requirements" panel for instant VRAM and system memory projections.
@@ -52,4 +54,4 @@ Once the HUD server is initiated, you can access the interface through your loca
 
 This project is maintained privately by Naman Pahariya for Nexus Industries internal operations and computation estimation.
 
-*Licensed under MIT (c) 2026 Naman Pahariya (Nexus Industries).*
+_Licensed under MIT (c) 2026 Naman Pahariya (Nexus Industries)._
