@@ -1,102 +1,125 @@
-# NEXUS INDUSTRIES | LLM INFERENCE HARDWARE CALCULATOR
+# Nexus LLM Inference Hardware Calculator
 
-**Developed by: Naman Pahariya**
+Created and maintained by **Naman Pahariya**.
 
-Welcome to the internal computational architecture sizing tool for Nexus Industries. This advanced interface calculates exact VRAM, System RAM, and Physical Disk limits required to run complex neural networks and Large Language Models (LLMs) locally.
-
-Built with a high-fidelity Heads-Up Display (HUD) mimicking Stark-level design, this application strips away guesswork when initializing multi-billion parameter configurations.
+A dedicated hardware sizing tool for local Large Language Model (LLM) inference. It calculates VRAM demands, system memory requirements, disk footprint, and GPU topology for model configurations ranging from 1B to 1000B parameters.
 
 ---
 
-### ⚡ Core Capabilities
+## Overview
 
-- **Real-Time VRAM Telemetry:** Calculate instant projections based on:
-  - Neural Network Matrix Size (Parameter Count)
-  - Memory Quantization Profiles (FP32 down to INT2 precision scales, including GPTQ & AWQ)
-  - Active Context Length Memory Allocation
-  - KV Cache state caching
-- **Dynamic System Mapping:** Toggle between Discrete GPU computations (configurable cluster sizing) or Unified Memory architecture (Silicon SoC).
-- **Physical Footprint Analysis:** Live forecasting of on-disk storage requirements for frozen checkpoints.
+Running neural networks locally requires balancing model weights, context windows, KV cache state, and runtime activation buffers against system memory and GPU hardware. 
+
+This calculator models memory requirements for single-user inference (batch size 1) across Discrete GPU and Unified Memory architectures, helping engineers right-size their compute targets before downloading or deploying large model checkpoints.
 
 ---
 
-### 🛠️ Tech Stack
+## Features
+
+- **Precision Scaling:** Calculate memory usage across standard precisions and quantization schemes:
+  - Full precision (FP32) and half precision (FP16)
+  - Integer quantization (Q8, Q6, Q5, Q4, Q3, Q2)
+  - Pre-quantized formats (GPTQ, AWQ)
+- **Context Window and KV Cache Estimation:** Model incremental streaming decoding or bulk forward-pass generation, with independent KV cache quantization options.
+- **Hardware Architecture Mapping:**
+  - **Discrete GPUs:** Automatic calculation of required GPU counts (8GB to 80GB VRAM profiles) including real-world memory fragmentation buffers.
+  - **Unified Memory:** Validation against Unified Memory pools (Apple Silicon, AMD Ryzen AI Max) adhering to OS headroom constraints.
+- **Disk Storage Projections:** Exact byte-level on-disk storage estimates for model weights and safetensors.
+
+---
+
+## Tech Stack
 
 - **Framework:** React 19
 - **Language:** TypeScript
-- **Build Tool:** Vite
+- **Bundler:** Vite
 
 ---
 
-### 🔧 Installation / Initialization Protocol
+## Getting Started
 
-Execute the following commands to initialize dependencies and launch the HUD server locally:
+### Prerequisites
+
+- Node.js (version 20 or higher recommended)
+- npm
+
+### Installation
+
+Clone the repository and install dependencies:
 
 ```bash
-# 1. Install dependencies
+git clone https://github.com/NamanPahariya2009/NEXUS-LLM-Calculator.git
+cd NEXUS-LLM-Calculator
 npm install
+```
 
-# 2. Boot HUD Server in development mode
+### Development Server
+
+Start the local development server:
+
+```bash
 npm run dev
 ```
 
-### 📦 Available Scripts
+The application will be accessible at `http://localhost:5173/` or across your local network via your host IP address.
 
-- `npm run dev` — Starts the local Vite development server with hot module reloading.
-- `npm run build` — Compiles TypeScript and packages optimized static production assets.
-- `npm run preview` — Locally previews the production build.
+### Production Build
 
----
+Compile TypeScript and bundle optimized static assets:
 
-### 🖥️ Accessing the UI
-
-Once the HUD server is initiated, you can access the interface through your local terminal network at:
-👉 **[http://localhost:5173/](http://localhost:5173/)** on the local device, or **`http://<your-ip>:5173/`** from any device on the local network.
-
----
-
-### 🎮 Interface Control Protocol
-
-1. **Input Configuration:** Use the left-side telemetry panel to set your model's billion-parameter count.
-2. **Precision Calibration:** Adjust the "Model Quantization" dropdown to simulate different compression levels (e.g., Q4 for standard consumer hardware, F16 for high-fidelity clusters).
-3. **KV Cache & Context:** Calibrate context length and toggle KV caching to monitor attention vector memory allocation.
-4. **Hardware Architecture:** Toggle between "Discrete GPU" (RTX/NVIDIA style) or "Unified Memory" (Stark/Apple style) to observe scaling and memory limits.
-5. **Real-Time Telemetry:** Monitor the right-side "Hardware Requirements" panel for instant VRAM, GPU count, and system memory projections.
-
----
-
-### 🧠 Technical Operations
-
-- **KV Cache Allocation:** Enabling KV Cache re-uses attention vectors, significantly accelerating real-time decoding, monitored directly in your VRAM overhead.
-- **Unified Limitations:** Unified memory forecasts strictly abide by the 75% rule to ensure host OS stability during extreme calculation spikes.
-- **Hardware Agnostic Calculations:** Base hardware parameters are generalized approximations extrapolated for optimal matrix execution. Actual compute times and exact byte loads will vary depending on your specific ML engine (vLLM, Ollama, TensorRT-LLM).
-
----
-
-### 📁 Project Architecture
-
-```text
-├── index.html              # Application entry point
-├── package.json            # Lightweight dependencies & scripts
-├── vite.config.ts          # Vite bundler configuration
-├── tsconfig.json           # TypeScript configuration
-├── public/
-│   └── llm_calc_icon.png   # HUD favicon & system icon
-└── src/
-    ├── App.tsx             # Main HUD telemetry view
-    ├── App.css             # HUD styling & Stark-inspired aesthetics
-    ├── calculations.ts     # Core mathematical inference logic
-    ├── types.ts            # Type definitions for quantization & memory
-    ├── main.tsx            # React application bootstrap
-    └── components/
-        ├── Tooltip.tsx     # Telemetry tooltip component
-        └── Tooltip.css     # Tooltip presentation styles
+```bash
+npm run build
+npm run preview
 ```
 
 ---
 
-### 🛡️ Nexus Industries System Integrity
+## Calculation Model
 
-This project is maintained privately by Naman Pahariya for Nexus Industries internal operations and computation estimation.
+Memory calculation uses the following principles:
 
-_Licensed under MIT (c) 2026 Naman Pahariya (Nexus Industries)._
+1. **Base Model Weights:** Parameter count multiplied by precision byte factor (e.g., FP16 = 2 bytes/param; Q4 = 0.5 bytes/param). Base weights remain constant regardless of context length.
+2. **Context and KV Cache:**
+   - Incremental mode: Memory scales linearly with context length when KV caching is active, adjusted by the chosen KV cache quantization factor.
+   - Bulk mode: Context processing stores full intermediate activations across tokens.
+3. **Runtime Allocation Overhead:** An overhead multiplier (~10%) is applied to cover CUDA context initialization, memory fragmentation, and transient scratch buffers.
+4. **Hardware Fitting:** Discrete GPU recommendations include a 20% buffer to reflect real-world execution overhead and avoid out-of-memory (OOM) faults.
+
+---
+
+## Project Structure
+
+```text
+├── index.html              # Entry HTML document
+├── package.json            # Scripts and dependencies
+├── vite.config.ts          # Vite configuration
+├── tsconfig.json           # TypeScript project references
+├── tsconfig.app.json       # Application TypeScript configuration
+├── public/
+│   └── llm_calc_icon.png   # Application icon
+└── src/
+    ├── main.tsx            # React bootstrap
+    ├── App.tsx             # Main calculator interface and state
+    ├── App.css             # Interface styles and theme variables
+    ├── calculations.ts     # Core mathematical and memory formulas
+    ├── types.ts            # Quantization and system type definitions
+    └── components/
+        ├── Tooltip.tsx     # Information tooltip component
+        └── Tooltip.css     # Tooltip styles
+```
+
+---
+
+## Author & Branding
+
+**Naman Pahariya**  
+- GitHub: [@NamanPahariya2009](https://github.com/NamanPahariya2009)
+- Organization: Nexus Industries
+
+---
+
+## License
+
+This program is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License v3.0 (GPLv3)** as published by the Free Software Foundation.
+
+See the [LICENSE](LICENSE) file for the full license text.

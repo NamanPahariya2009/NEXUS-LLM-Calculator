@@ -1,8 +1,10 @@
 {
   "name": "nexus-industries-llm-calculator",
   "author": "Naman Pahariya",
+  "description": "LLM Inference Hardware Calculator by Naman Pahariya",
+  "license": "GPL-3.0-or-later",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

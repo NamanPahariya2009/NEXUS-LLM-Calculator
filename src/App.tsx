@@ -6,33 +6,19 @@ import {
   calculateOnDiskSize,
 } from './calculations';
 import { Tooltip } from './components/Tooltip';
+
 function App() {
-  // -----------------------------------
-  // 1. STATE
-  // -----------------------------------
-
-  // Model config
-  const [params, setParams] = useState<number>(65); // Billions of parameters
+  const [params, setParams] = useState<number>(65);
   const [modelQuant, setModelQuant] = useState<ModelQuantization>('Q4');
-
-  // KV Cache
-  const [useKvCache, setUseKvCache] = useState<boolean>(false); // Changed from true to false
-  const [kvCacheQuant, setKvCacheQuant] = useState<KvCacheQuantization>('Q4'); // Changed from 'F16' to 'Q4'
-
-  // Inference mode
+  const [useKvCache, setUseKvCache] = useState<boolean>(false);
+  const [kvCacheQuant, setKvCacheQuant] = useState<KvCacheQuantization>('Q4');
   const [inferenceMode, setInferenceMode] = useState<'incremental' | 'bulk'>(
     'incremental'
   );
-
-  // Misc
   const [contextLength, setContextLength] = useState<number>(4096);
   const [memoryMode, setMemoryMode] = useState<MemoryMode>('DISCRETE_GPU');
-  const [systemMemory, setSystemMemory] = useState<number>(128); // in GB
-  const [gpuVram, setGpuVram] = useState<number>(24); // in GB, default 24GB
-
-  // -----------------------------------
-  // 2. HELPER FUNCTIONS
-  // -----------------------------------
+  const [systemMemory, setSystemMemory] = useState<number>(128);
+  const [gpuVram, setGpuVram] = useState<number>(24);
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -44,9 +30,6 @@ function App() {
     }
   };
 
-  // -----------------------------------
-  // 3. CALCULATE & RENDER
-  // -----------------------------------
   const recommendation = calculateHardwareRecommendation(
     params,
     modelQuant,
@@ -66,13 +49,15 @@ function App() {
       <h1>NEXUS INDUSTRIES</h1>
       <p className="intro-text">
         LLM INFERENCE HARDWARE CALCULATOR<br />
-        <span style={{ color: 'var(--primary-color)', fontSize: '0.8rem' }}>BY NAMAN PAHARIYA</span><br /><br />
-        Estimate VRAM & System RAM for single-user inference (Batch=1).<br />
-        Model quant & KV cache quant are configured separately.
+        <span style={{ color: 'var(--primary-color)', fontSize: '0.85rem', letterSpacing: '2px', fontWeight: 600 }}>
+          DESIGNED BY NAMAN PAHARIYA
+        </span>
+        <br /><br />
+        Estimate VRAM and System RAM for single-user inference (Batch = 1).<br />
+        Model weights and KV cache quantization are calibrated independently.
       </p>
 
       <div className="layout">
-        {/* Left Panel: Inputs */}
         <div className="input-panel">
           <h2 className="section-title">Model Configuration</h2>
 
@@ -86,7 +71,7 @@ function App() {
               value={params}
               onChange={(e) => handleInputChange(e, setParams)}
             />
-            <Tooltip text="The total number of model parameters in billions. For example, '13' means a 13B model.">
+            <Tooltip text="Total parameter count in billions (e.g., 70 for Llama 3 70B).">
               i
             </Tooltip>
           </label>
@@ -99,9 +84,10 @@ function App() {
               onChange={(e) => setParams(Number(e.target.value))}
             />
           </div>
+
           <label className="label-range">
             Model Quantization:
-            <Tooltip text="The data format used to store model weights in GPU memory. For instance, F16 uses ~2GB per 1B params, Q4 ~0.5GB, etc.">
+            <Tooltip text="Precision format for loaded model weights. Lower bits decrease VRAM requirements.">
               i
             </Tooltip>
           </label>
@@ -109,7 +95,6 @@ function App() {
             value={modelQuant}
             onChange={(e) => setModelQuant(e.target.value as ModelQuantization)}
           >
-            {/* F32, F16, Q8, Q6, Q5, Q4, Q3, Q2, GPTQ, AWQ */}
             <option value="F32">F32</option>
             <option value="F16">F16</option>
             <option value="Q8">Q8</option>
@@ -133,7 +118,7 @@ function App() {
               value={contextLength}
               onChange={(e) => handleInputChange(e, setContextLength)}
             />
-            <Tooltip text="Maximum tokens (including prompt and history) available at once. Larger context = more memory usage.">
+            <Tooltip text="Maximum active context window. Higher context lengths scale KV memory footprint.">
               i
             </Tooltip>
           </label>
@@ -148,10 +133,9 @@ function App() {
             />
           </div>
 
-          {/* Inference Mode */}
           <label className="label-range">
             Inference Mode:
-            <Tooltip text="'Incremental' is streaming token-by-token generation, 'Bulk' processes the entire context in one pass.">
+            <Tooltip text="Incremental generates tokens sequentially. Bulk computes prompts and activations in a single forward pass.">
               i
             </Tooltip>
           </label>
@@ -161,11 +145,10 @@ function App() {
               setInferenceMode(e.target.value as 'incremental' | 'bulk')
             }
           >
-            <option value="incremental">Incremental (streaming)</option>
-            <option value="bulk">Bulk (all at once)</option>
+            <option value="incremental">Incremental (Streaming)</option>
+            <option value="bulk">Bulk (All at once)</option>
           </select>
 
-          {/* KV Cache Toggle */}
           <div className="checkbox-row">
             <input
               type="checkbox"
@@ -175,21 +158,16 @@ function App() {
             />
             <label htmlFor="kvCache">
               Enable KV Cache
-              <Tooltip text="Reuses key/value attention states to accelerate decoding, at the cost of additional VRAM.">
+              <Tooltip text="Preserves calculated key/value attention states to accelerate generation.">
                 i
               </Tooltip>
             </label>
           </div>
 
-          {/* 
-             (Animated) KV Cache Quant Section:
-             We'll wrap it in a div that transitions "max-height"
-             so the UI doesn't jump abruptly.
-          */}
           <div className={`kvCacheAnimate ${useKvCache ? 'open' : 'closed'}`}>
             <label className="label-range">
               KV Cache Quantization:
-              <Tooltip text="Data format for KV cache memory usage. Lower precision reduces memory but may affect performance/quality.">
+              <Tooltip text="Quantization scale applied to stored KV attention matrices.">
                 i
               </Tooltip>
             </label>
@@ -218,7 +196,7 @@ function App() {
           >
             <option value="DISCRETE_GPU">Discrete GPU</option>
             <option value="UNIFIED_MEMORY">
-              Unified memory (ex: Apple silicon, AMD Ryzen™ Al Max+ 395)
+              Unified memory (Apple Silicon, AMD Ryzen AI Max)
             </option>
           </select>
 
@@ -266,7 +244,6 @@ function App() {
           </div>
         </div>
 
-        {/* Right Panel: Results */}
         <div className="results-panel">
           <h2 className="section-title">Hardware Requirements</h2>
 
@@ -304,12 +281,13 @@ function App() {
           )}
 
           {memoryMode === 'UNIFIED_MEMORY' && recommendation.fitsUnified && (
-            <p style={{ color: 'green' }}>✅ Fits in unified memory!</p>
+            <p style={{ color: '#22c55e', fontWeight: 600 }}>
+              Fits in unified memory.
+            </p>
           )}
           {memoryMode === 'UNIFIED_MEMORY' && !recommendation.fitsUnified && (
-            <p style={{ color: 'red' }}>
-              ⚠️ Exceeds unified memory. Increase system RAM or reduce model
-              size.
+            <p style={{ color: '#ef4444', fontWeight: 600 }}>
+              Exceeds unified memory. Increase system RAM or reduce model size.
             </p>
           )}
         </div>
