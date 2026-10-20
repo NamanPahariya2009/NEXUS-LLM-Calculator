@@ -1,6 +1,6 @@
 # Nexus LLM Inference Hardware Calculator
 
-Created and maintained by **Naman Pahariya**.
+Created by **Naman Pahariya**.
 
 A dedicated hardware sizing tool for local Large Language Model (LLM) inference. It calculates VRAM demands, system memory requirements, disk footprint, and GPU topology for model configurations ranging from 1B to 1000B parameters.
 
@@ -110,11 +110,10 @@ Memory calculation uses the following principles:
 
 ---
 
-## Author & Branding
+## Developer
 
 **Naman Pahariya**  
 - GitHub: [@NamanPahariya2009](https://github.com/NamanPahariya2009)
-- Organization: Nexus Industries
 
 ---
 
